@@ -1,130 +1,161 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-    <html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
 
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Build CRUD Application with edit form in expanded row details - jQuery EasyUI Demo</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/jquery-easyui-1.5.4.5/themes/default/easyui.css" type="text/css" />
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/jquery-easyui-1.5.4.5/themes/icon.css" type="text/css" />
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/jquery-easyui-1.5.4.5/demo/demo.css" type="text/css" />
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>用户管理</title>
+    <link rel="stylesheet" type="text/css" href="https://www.jeasyui.com/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="https://www.jeasyui.com/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="https://www.jeasyui.com/easyui/demo/demo.css">
 
-        <script type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
-        <script type="text/javascript" src="https://www.jeasyui.com/easyui/jquery.easyui.min.js"></script>
-        <script type="text/javascript" src="https://www.jeasyui.com/easyui/datagrid-detailview.js"></script>
-    </head>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="https://www.jeasyui.com/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="https://www.jeasyui.com/easyui/datagrid-detailview.js"></script>
+</head>
 
-    <body class="easyui-layout">
-        <div region="west" split="true" title="Navigator" style="width:150px;">
-        </div>
-        <div id="content" region="center" title="userLoginInfoList" style="padding:5px;">
-            <table id="dg" class="easyui-datagrid"  title="userList" style="height:550px" url="${pageContext.request.contextPath}/user/userList" 
-            toolbar="#toolbar" pagination="true" fitColumns="true" singleSelect="true">
-                <thead>
-                    <tr>
+<body class="easyui-layout">
+    <div data-options="region:'north',border:false" style="height: 60px; background: #B3DFDA; padding: 10px">north
+        region</div>
+    <div data-options="region:'west',split:true,title:'West'" style="width: 150px; padding: 10px;">west content</div>
+    <div data-options="region:'center',title:'Center'">
+        <table id="dg" title="My Users" class="easyui-datagrid" url="${pageContext.request.contextPath}/user/userList" toolbar="#toolbar" pagination="true"
+         rownumbers="true" fitColumns="true" singleSelect="true">
+            <thead>
+                <tr>
                         <th field="userid" width="50">USERID</th>
                         <th field="username" width="50">USERNAME</th>
                         <th field="password" width="50">PASSWORD</th>
-                    </tr>
-                </thead>
-            </table>
-            <div id="toolbar">
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newItem()">New</a>
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyItem()">Destroy</a>
-            </div>
+                </tr>
+            </thead>
+        </table>
+        <div id="toolbar">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">New User</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">Edit User</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyUser()">Remove User</a>
         </div>
 
+        <div id="dlg" class="easyui-dialog" style="width:400px;height:280px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
+            <div class="ftitle">User Information</div>
+            <form id="fm" method="post" novalidate>
+                <div class="fitem">
+                    <label>First Name:</label>
+                    <input name="firstname" class="easyui-textbox" required="true">
+                </div>
+                <div class="fitem">
+                    <label>Last Name:</label>
+                    <input name="lastname" class="easyui-textbox" required="true">
+                </div>
+                <div class="fitem">
+                    <label>Phone:</label>
+                    <input name="phone" class="easyui-textbox">
+                </div>
+                <div class="fitem">
+                    <label>Email:</label>
+                    <input name="email" class="easyui-textbox" validType="email">
+                </div>
+            </form>
+        </div>
+        <div id="dlg-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUser()" style="width:90px">Save</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">Cancel</a>
+        </div>
 
-        <script type="text/javascript">
-            $(function () {
-                $('#dg').datagrid({
-                    view: detailview,
-                    detailFormatter: function (index, row) {
-                            return '<div class="ddv"></div>';
-                        },
-                        onExpandRow: function (index, row) {
-                            var ddv = $(this).datagrid('getRowDetail', index).find('div.ddv');
-                            ddv.panel({
-                                border: false,
-                                cache: true,
-                                href: 'show_form.php?index=' + index,
-                                onLoad: function () {
-                                    $('#dg').datagrid('fixDetailRowHeight', index);
-                                    $('#dg').datagrid('selectRow', index);
-                                    $('#dg').datagrid('getRowDetail', index).find('form').form('load', row);
-                                }
-                            });
-                            $('#dg').datagrid('fixDetailRowHeight', index);
-                        }
-                });
+    </div>
+
+    <script type="text/javascript">
+        var url;
+
+        $('#dg').datagrid('reload');  
+        function newUser() {
+            $('#dlg').dialog('open').dialog('setTitle', 'New User');
+            $('#fm').form('clear');
+            url = 'save_user.php';
+        }
+
+        function editUser() {
+            var row = $('#dg').datagrid('getSelected');
+            if (row) {
+                $('#dlg').dialog('open').dialog('setTitle', 'Edit User');
+                $('#fm').form('load', row);
+                url = 'update_user.php?id=' + row.id;
+            }
+        }
+
+        function saveUser() {
+            $('#fm').form('submit', {
+                url: url,
+                onSubmit: function() {
+                    return $(this).form('validate');
+                },
+                success: function(result) {
+                    var result = eval('(' + result + ')');
+                    if (result.errorMsg) {
+                        $.messager.show({
+                            title: 'Error',
+                            msg: result.errorMsg
+                        });
+                    } else {
+                        $('#dlg').dialog('close'); // close the dialog
+                        $('#dg').datagrid('reload'); // reload the user data
+                        
+                    }
+                }
             });
+        }
 
-            function saveItem(index) {
-                var row = $('#dg').datagrid('getRows')[index];
-                var url = row.isNewRecord ? 'save_user.php' : 'update_user.php?id=' + row.id;
-                $('#dg').datagrid('getRowDetail', index).find('form').form('submit', {
-                    url: url,
-                    onSubmit: function () {
-                            return $(this).form('validate');
-                        },
-                        success: function (data) {
-                            data = eval('(' + data + ')');
-                            data.isNewRecord = false;
-                            $('#dg').datagrid('collapseRow', index);
-                            $('#dg').datagrid('updateRow', {
-                                index: index,
-                                row: data
-                            });
-                        }
+        function destroyUser() {
+            var row = $('#dg').datagrid('getSelected');
+            if (row) {
+                $.messager.confirm('Confirm', 'Are you sure you want to destroy this user?', function(r) {
+                    if (r) {
+                        $.post('destroy_user.php', {
+                            id: row.id
+                        }, function(result) {
+                            if (result.success) {
+                                $('#dg').datagrid('reload'); // reload the user data
+                            } else {
+                                $.messager.show({ // show error message
+                                    title: 'Error',
+                                    msg: result.errorMsg
+                                });
+                            }
+                        }, 'json');
+                    }
                 });
             }
+        }
+    </script>
+    <style type="text/css">
+        #fm {
+            margin: 0;
+            padding: 10px 30px;
+        }
 
-            function cancelItem(index) {
-                var row = $('#dg').datagrid('getRows')[index];
-                if (row.isNewRecord) {
-                    $('#dg').datagrid('deleteRow', index);
-                } else {
-                    $('#dg').datagrid('collapseRow', index);
-                }
-            }
+        .ftitle {
+            font-size: 14px;
+            font-weight: bold;
+            padding: 5px 0;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+        }
 
-            function destroyItem() {
-                var row = $('#dg').datagrid('getSelected');
-                if (row) {
-                    $.messager.confirm('Confirm', 'Are you sure you want to remove this user?', function (r) {
-                        if (r) {
-                            var index = $('#dg').datagrid('getRowIndex', row);
-                            $.post('destroy_user.php', {
-                                id: row.id
-                            }, function () {
-                                $('#dg').datagrid('deleteRow', index);
-                            });
-                        }
-                    });
-                }
-            }
+        .fitem {
+            margin-bottom: 5px;
+        }
 
-            function newItem() {
-                $('#dg').datagrid('appendRow', {
-                    isNewRecord: true
-                });
-                var index = $('#dg').datagrid('getRows').length - 1;
-                $('#dg').datagrid('expandRow', index);
-                $('#dg').datagrid('selectRow', index);
-            }
-        </script>
-        <style type="text/css">
-            form {
-                margin: 0;
-                padding: 0;
-            }
-            .dv-table td {
-                border: 0;
-            }
-            .dv-table input {
-                border: 1px solid #ccc;
-            }
-        </style>
-    </body>
+        .fitem label {
+            display: inline-block;
+            width: 80px;
+        }
 
-    </html>
+        .fitem input {
+            width: 160px;
+        }
+    </style>
+
+    </style>
+</body>
+
+</html>
