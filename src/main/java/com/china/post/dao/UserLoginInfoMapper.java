@@ -23,4 +23,6 @@ public interface UserLoginInfoMapper {
     List<UserLoginInfo> getUserList();
 
     Long getTotal(Map<String, Object> map);
+
+    int save(UserLoginInfo userLoginInfo);
 }

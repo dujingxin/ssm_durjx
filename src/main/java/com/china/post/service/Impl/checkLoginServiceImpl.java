@@ -35,7 +35,7 @@ import com.china.post.service.ICheckLoginService;
 public class checkLoginServiceImpl implements ICheckLoginService {
 
     @Resource
-    private UserLoginInfoMapper userLoginInfo;
+    private UserLoginInfoMapper userLoginInfoMapper;
 
     /*
      * 
@@ -44,12 +44,12 @@ public class checkLoginServiceImpl implements ICheckLoginService {
     @Override
     public UserLoginInfo checkLoginUser(String name, String passWord) {
         System.out.println("Service-" + name + ":" + passWord);
-        return userLoginInfo.checkUserLogin(name, passWord);
+        return userLoginInfoMapper.checkUserLogin(name, passWord);
     }
 
     @Override
     public List<UserLoginInfo> getUserList() {
-        return userLoginInfo.getUserList();
+        return userLoginInfoMapper.getUserList();
     }
 
     /*
@@ -57,8 +57,11 @@ public class checkLoginServiceImpl implements ICheckLoginService {
      */
     @Override
     public Long getTotal(Map<String, Object> map) {
-        return userLoginInfo.getTotal(map);
+        return userLoginInfoMapper.getTotal(map);
     }
 
-
+    @Override
+    public int save(UserLoginInfo userLoginInfo) {
+        return userLoginInfoMapper.save(userLoginInfo);
+    }
 }

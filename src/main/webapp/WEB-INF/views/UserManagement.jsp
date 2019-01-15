@@ -6,13 +6,15 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>用户管理</title>
-    <link rel="stylesheet" type="text/css" href="https://www.jeasyui.com/easyui/themes/default/easyui.css">
-    <link rel="stylesheet" type="text/css" href="https://www.jeasyui.com/easyui/themes/icon.css">
-    <link rel="stylesheet" type="text/css" href="https://www.jeasyui.com/easyui/demo/demo.css">
-
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script type="text/javascript" src="https://www.jeasyui.com/easyui/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="https://www.jeasyui.com/easyui/datagrid-detailview.js"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/jquery-easyui-1.5.4.5/jquery.min.js"></script>
+  <!-- 引入EasyUI -->
+  <script type="text/javascript" src="${pageContext.request.contextPath}/jquery-easyui-1.5.4.5/jquery.easyui.min.js"></script>
+  <!-- 引入EasyUI的中文国际化js，让EasyUI支持中文 -->
+  <script type="text/javascript" src="${pageContext.request.contextPath}/jquery-easyui-1.5.4.5/locale/easyui-lang-zh_CN.js"></script>
+  <!-- 引入EasyUI的样式文件-->
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/jquery-easyui-1.5.4.5/themes/default/easyui.css" type="text/css"/>
+  <!-- 引入EasyUI的图标样式文件-->
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/jquery-easyui-1.5.4.5/themes/icon.css" type="text/css"/>
 </head>
 
 <body class="easyui-layout">
@@ -40,20 +42,16 @@
             <div class="ftitle">User Information</div>
             <form id="fm" method="post" novalidate>
                 <div class="fitem">
-                    <label>First Name:</label>
-                    <input name="firstname" class="easyui-textbox" required="true">
+                    <label>USERID:</label>
+                    <input name="userid" class="easyui-textbox" required="true">
                 </div>
                 <div class="fitem">
-                    <label>Last Name:</label>
-                    <input name="lastname" class="easyui-textbox" required="true">
+                    <label>USERNAME:</label>
+                    <input name="username" class="easyui-textbox" required="true">
                 </div>
                 <div class="fitem">
-                    <label>Phone:</label>
-                    <input name="phone" class="easyui-textbox">
-                </div>
-                <div class="fitem">
-                    <label>Email:</label>
-                    <input name="email" class="easyui-textbox" validType="email">
+                    <label>PASSWORD:</label>
+                    <input name="password" class="easyui-textbox">
                 </div>
             </form>
         </div>
@@ -67,7 +65,6 @@
     <script type="text/javascript">
         var url;
 
-        $('#dg').datagrid('reload');  
         function newUser() {
             $('#dlg').dialog('open').dialog('setTitle', 'New User');
             $('#fm').form('clear');

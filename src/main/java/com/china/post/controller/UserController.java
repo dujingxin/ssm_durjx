@@ -92,6 +92,24 @@ public class UserController {
             return "showUser";
         }
         return "showUser";
+    }
 
+    /**
+     * 
+     * @Title: saveAction
+     *
+     * @Description: 保存数据
+     *
+     * @param UserLoginInfo 登录用户 @param response @param @return 参数
+     *
+     * 创建日期: 2019年1月15日下午3:47:32 <br/>
+     *
+     * 创 建 人: dujingxin <br/> @throws
+     */
+    @RequestMapping("/save")
+    public String saveAction(UserLoginInfo userLoginInfo, HttpServletResponse response) {
+
+        checkLoginService.save(userLoginInfo);
+        return null;
     }
 }

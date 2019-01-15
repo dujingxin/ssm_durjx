@@ -25,4 +25,6 @@ public interface ICheckLoginService {
 
 
     public Long getTotal(Map<String, Object> map);
+
+    public int save(UserLoginInfo userLoginInfo);
 }
