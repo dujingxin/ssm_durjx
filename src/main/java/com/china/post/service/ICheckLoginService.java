@@ -27,4 +27,20 @@ public interface ICheckLoginService {
     public Long getTotal(Map<String, Object> map);
 
     public int save(UserLoginInfo userLoginInfo);
+
+    public int updateUser(UserLoginInfo userLoginInfo);
+
+    /**
+     * 
+     * @Title: deleteUser
+     *
+     * @Description: 删除用户
+     *
+     * @param @param indexId 字段ID @return 参数
+     *
+     * 创建日期: 2019年1月21日下午2:28:54 <br/>
+     *
+     * 创 建 人: dujingxin <br/> @throws
+     */
+    public int deleteUser(int indexId);
 }

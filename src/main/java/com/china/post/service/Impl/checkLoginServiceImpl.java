@@ -62,6 +62,16 @@ public class checkLoginServiceImpl implements ICheckLoginService {
 
     @Override
     public int save(UserLoginInfo userLoginInfo) {
-        return userLoginInfoMapper.save(userLoginInfo);
+        return userLoginInfoMapper.insert(userLoginInfo);
+    }
+
+    @Override
+    public int updateUser(UserLoginInfo userLoginInfo) {
+        return userLoginInfoMapper.updateByPrimaryKeySelective(userLoginInfo);
+    }
+
+    @Override
+    public int deleteUser(int indexId) {
+        return userLoginInfoMapper.deleteByPrimaryKey(indexId);
     }
 }

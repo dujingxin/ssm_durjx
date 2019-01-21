@@ -40,9 +40,9 @@
     where USERID = #{userid,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.china.post.pojo.UserLoginInfo">
-    insert into userlogininfo (USERID, USERNAME, PASSWORD
+    insert into userlogininfo ( USERNAME, PASSWORD
       )
-    values (#{userid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}
+    values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.china.post.pojo.UserLoginInfo">

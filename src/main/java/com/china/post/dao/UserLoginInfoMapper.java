@@ -24,5 +24,6 @@ public interface UserLoginInfoMapper {
 
     Long getTotal(Map<String, Object> map);
 
-    int save(UserLoginInfo userLoginInfo);
+    int deleteByPrimaryKey(int indexId);
+
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,9 +27,11 @@ import net.sf.json.JSONObject;
 @RequestMapping("/user")
 public class UserController {
     @Resource
-    private IUserService       userService;
+    private IUserService        userService;
     @Autowired
-    private ICheckLoginService checkLoginService;
+    private ICheckLoginService  checkLoginService;
+
+    private static final Logger log = Logger.getLogger(UserController.class);// 日志文件
 
 
     @RequestMapping("/showUser")
@@ -41,7 +44,7 @@ public class UserController {
     }
 
     @RequestMapping("/Login")
-    public String Login() {
+    public String userLogin() {
         return "login";
     }
 
@@ -107,9 +110,49 @@ public class UserController {
      * 创 建 人: dujingxin <br/> @throws
      */
     @RequestMapping("/save")
-    public String saveAction(UserLoginInfo userLoginInfo, HttpServletResponse response) {
+    public String saveAction(UserLoginInfo userLoginInfo, HttpServletResponse response,
+        @RequestParam(value = "userid") int id) {
 
-        checkLoginService.save(userLoginInfo);
+        int resultTotal = 0;
+        // id为0，则进行保存操作,id不为0，则为更新操作
+        if (id == 0) {
+            // 新增
+            resultTotal = checkLoginService.save(userLoginInfo);
+        }
+        else {
+            // 更新
+            userLoginInfo.setUserid(id);
+            resultTotal = checkLoginService.updateUser(userLoginInfo);
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        if (resultTotal > 0) {
+            jsonObject.put("success", "true");
+        }
+        else {
+            jsonObject.put("errorMsg", "添加失败");
+        }
+        ResponseUtil.Write(response, jsonObject);
+        return null;
+    }
+
+    @RequestMapping("/deleteUser")
+    public String deleteAction(UserLoginInfo userLoginInfo, HttpServletResponse response,
+        @RequestParam(value = "userid") String indexArr) {
+        String[] ids = indexArr.split(",");
+        int resultTotal = 0;
+        for (String id : ids) {
+            resultTotal = checkLoginService.deleteUser(Integer.parseInt(id));
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        if (resultTotal > 0) {
+            jsonObject.put("success", "true");
+        }
+        else {
+            jsonObject.put("errorMsg", "添加失败");
+        }
+        ResponseUtil.Write(response, jsonObject);
         return null;
     }
 }

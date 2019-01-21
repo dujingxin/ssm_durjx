@@ -26,7 +26,7 @@
          rownumbers="true" fitColumns="true" singleSelect="true">
             <thead>
                 <tr>
-                        <th field="userid" width="50">USERID</th>
+                       <!--  <th field="userid" width="50">USERID</th> -->
                         <th field="username" width="50">USERNAME</th>
                         <th field="password" width="50">PASSWORD</th>
                 </tr>
@@ -41,17 +41,17 @@
         <div id="dlg" class="easyui-dialog" style="width:400px;height:280px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
             <div class="ftitle">User Information</div>
             <form id="fm" method="post" novalidate>
-                <div class="fitem">
+              <!--   <div class="fitem">
                     <label>USERID:</label>
                     <input name="userid" class="easyui-textbox" required="true">
-                </div>
+                </div> -->
                 <div class="fitem">
                     <label>USERNAME:</label>
                     <input name="username" class="easyui-textbox" required="true">
                 </div>
                 <div class="fitem">
                     <label>PASSWORD:</label>
-                    <input name="password" class="easyui-textbox">
+                    <input class="easyui-passwordbox" prompt="Password" name="password" >
                 </div>
             </form>
         </div>
@@ -68,35 +68,40 @@
         function newUser() {
             $('#dlg').dialog('open').dialog('setTitle', 'New User');
             $('#fm').form('clear');
-            url = 'save_user.php';
+            url = '${pageContext.request.contextPath}/user/save?userid='+ 0;
         }
 
         function editUser() {
-            var row = $('#dg').datagrid('getSelected');
-            if (row) {
-                $('#dlg').dialog('open').dialog('setTitle', 'Edit User');
-                $('#fm').form('load', row);
-                url = 'update_user.php?id=' + row.id;
+        	var SelectRows = $("#dg").datagrid('getSelections');
+            if( 1 != SelectRows.length ){
+                $.messager.alert("系统提示", "请选择一行要编辑的数据");
+                return;
             }
+            var SelectRow = SelectRows[0];
+            $("#dlg").dialog('open').dialog('setTitle',"编辑数据");
+            $("#fm").form('load',SelectRow);
+            
+            //设置URL
+            url = "${pageContext.request.contextPath}/user/save?userid="+SelectRow.userid;
         }
 
-        function saveUser() {
-            $('#fm').form('submit', {
+        function saveUser(){
+            
+            $('#fm').form('submit',{
                 url: url,
-                onSubmit: function() {
+                onSubmit: function(){
                     return $(this).form('validate');
                 },
-                success: function(result) {
-                    var result = eval('(' + result + ')');
-                    if (result.errorMsg) {
+                success: function(result){
+                    var result = eval('('+result+')');
+                    if (result.errorMsg){
                         $.messager.show({
                             title: 'Error',
                             msg: result.errorMsg
                         });
                     } else {
-                        $('#dlg').dialog('close'); // close the dialog
-                        $('#dg').datagrid('reload'); // reload the user data
-                        
+                        $('#dlg').dialog('close');      // close the dialog
+                        $('#dg').datagrid('reload');    // reload the user data
                     }
                 }
             });
@@ -104,12 +109,12 @@
 
         function destroyUser() {
             var row = $('#dg').datagrid('getSelected');
+            //url = "${pageContext.request.contextPath}/user/deleteUser"
             if (row) {
                 $.messager.confirm('Confirm', 'Are you sure you want to destroy this user?', function(r) {
                     if (r) {
-                        $.post('destroy_user.php', {
-                            id: row.id
-                        }, function(result) {
+                        $.post("${pageContext.request.contextPath}/user/deleteUser?userid=" + row.userid ,
+                        function(result) {
                             if (result.success) {
                                 $('#dg').datagrid('reload'); // reload the user data
                             } else {
@@ -152,7 +157,5 @@
         }
     </style>
 
-    </style>
 </body>
-
 </html>
